@@ -1,9 +1,13 @@
 #define COLOR_NUM 8
-int team_color[3] = {0, 0, 2};
 uint32_t color_bar[COLOR_NUM] = {0xFF0000, 0xFF9900, 0xFFD700, 0x66FF00, 0xFFFF, 0x66FF, 0x9900CC, 0xFF00FF};
 
 void set_game()
 {
+  for (int i = 0; i < 7; i++)
+  {
+    input_scan();
+    input_read(i);
+  }
   do
   {
     for (int i = 0; i < 20; i++)
@@ -43,6 +47,11 @@ void set_game()
 
 void set_match()
 {
+  for (int i = 0; i < 7; i++)
+  {
+    input_scan();
+    input_read(i);
+  }
   do
   {
     for (int i = 0; i < 20; i++)
@@ -78,6 +87,11 @@ void set_match()
 
 void set_color()
 {
+  for (int i = 0; i < 7; i++)
+  {
+    input_scan();
+    input_read(i);
+  }
   uint8_t flag = 3;
   do
   {
@@ -157,14 +171,12 @@ bool game()
     else dim = 0;
     coloring(19 - i, 0, dim);
   }
-  for (int i = 0; i < 400; i++)
+  for (int i = 0; i < 200; i++)
   {
     led_refresh(0);
     delay(10);
   }
 
-  game_point[1] = 0;
-  game_point[2] = 0;
   for (int i = 0; i < 7; i++)
     input_read(i);
   for (int i = 0; i < 10; i++)
@@ -205,6 +217,12 @@ bool game()
     if (input_read(6) == 2)
     {
       Serial.println("Match aborted");
+      for (int i = 10; i < 20; i++)
+      {
+        coloring(i, 2, 0);
+      }
+      led_refresh(0);
+      delay(500);
       return 2;
     }
     if (input_read(1) == 2 || input_read(5) == 2)
@@ -216,10 +234,12 @@ bool game()
       }
       blink_num = game_point[1] - 1;
       blink_count = 1000;
+      eeprom_write();
       Serial.print("GOAL! ");
       Serial.print(game_point[1]);
       Serial.print(" : ");
       Serial.println(game_point[2]);
+
 
     }
     if (input_read(3) == 2 || input_read(4) == 2)
@@ -231,6 +251,7 @@ bool game()
       }
       blink_num = game_point[2] - 1 + 10;
       blink_count = 1000;
+      eeprom_write();
       Serial.print("GOAL! ");
       Serial.print(game_point[1]);
       Serial.print(" : ");
@@ -240,6 +261,7 @@ bool game()
     {
       game_point[1]--;
       coloring(game_point[1], 1, 1);
+      eeprom_write();
       Serial.print("GOAL! ");
       Serial.print(game_point[1]);
       Serial.print(" : ");
@@ -249,6 +271,7 @@ bool game()
     {
       game_point[2]--;
       coloring(game_point[2] + 10, 2, 1);
+      eeprom_write();
       Serial.print("GOAL! ");
       Serial.print(game_point[1]);
       Serial.print(" : ");
@@ -285,7 +308,7 @@ bool game()
         Serial.println(" wins!");
         for (int i = flag * 10 - 10; i < flag * 10; i++)
         {
-          coloring(i, 0, 2);
+          coloring(i, flag, 2);
         }
         for (int i = 0; i < 1000; i++)
         {
@@ -308,15 +331,15 @@ void coloring(int num, int team, int dim)
 {
   if (team == 0)
   {
-    color[num].r = 255 / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
-    color[num].g = 255 / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
-    color[num].b = 255 / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
+    color[num].r = 255 / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
+    color[num].g = 255 / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
+    color[num].b = 255 / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
   }
   else
   {
-    color[num].r = (color_bar[team_color[team]] >> 16) / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
-    color[num].g = ((color_bar[team_color[team]] >> 8) % 256) / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
-    color[num].b = (color_bar[team_color[team]] % 256) / (dim == 1 ? 2 : 1) * (dim == 0 ? 0 : 1);
+    color[num].r = (color_bar[team_color[team]] >> 16) / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
+    color[num].g = ((color_bar[team_color[team]] >> 8) % 256) / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
+    color[num].b = (color_bar[team_color[team]] % 256) / (dim == 1 ? 3 : 1) * (dim == 0 ? 0 : 1);
   }
   /*
   Serial.print(color[num].r, HEX);

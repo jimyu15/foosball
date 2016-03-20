@@ -19,7 +19,7 @@ void input_scan()
   {
     if (digitalRead(input_pin[i]) == input_logic[i] && input[i] <= 0)
     {
-      if (input[i] < 10000)
+      if (input[i] > -10000)
         input[i]--;
     }
     else if (input[i] < 0)
@@ -46,7 +46,12 @@ void input_scan()
     }
   }
   if ((input[0] < -1 * LONG_PRESS && input[3] < -1 * LONG_PRESS) || (input[1] < -1 * LONG_PRESS && input[2] < -1 * LONG_PRESS))
+  {
+    
+    while(digitalRead(input_pin[0]) == input_logic[0] || digitalRead(input_pin[1]) == input_logic[1] || digitalRead(input_pin[2]) == input_logic[2] || digitalRead(input_pin[3]) == input_logic[3]);
+    input[0] == input[1] == input[2] == input[3] == 0;
     input[6] = LONG_PRESS + 1;
+  }
   /*
   if(Serial.available())
   {
