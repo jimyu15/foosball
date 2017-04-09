@@ -10,8 +10,6 @@ void setup()
   Serial.begin(115200);
   led_init();
   input_init();
-  if (eeprom_init())
-    starting = 0;
 
 }
 

@@ -3,7 +3,7 @@
 
 const int input_pin[6] = {2, 3, 4, 5, 6, 7};
 const bool input_logic[6] = {1, 1, 1, 1, 0, 0};
-volatile int input[7] = {0};
+extern volatile int input[7] = {0};
 
 void input_init()
 {

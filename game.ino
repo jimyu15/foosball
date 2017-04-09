@@ -297,28 +297,35 @@ bool game()
     }
     else if (flag)
     {
-      Serial.print("Team ");
-      Serial.print(flag);
-      Serial.println(" takes this game!");
-      match_point[flag]++;
-      if (match_point[flag] >= match_point[0])
+      if (abs(int(game_point[1]) - game_point[2]) <= 1 && match_point[0] - 1 == match_point[1] && match_point[1] == match_point[2])
+      {
+        Serial.println("Duece");
+      }
+      else
       {
         Serial.print("Team ");
         Serial.print(flag);
-        Serial.println(" wins!");
-        for (int i = flag * 10 - 10; i < flag * 10; i++)
+        Serial.println(" takes this game!");
+        match_point[flag]++;
+        if (match_point[flag] >= match_point[0])
         {
-          coloring(i, flag, 2);
+          Serial.print("Team ");
+          Serial.print(flag);
+          Serial.println(" wins!");
+          for (int i = flag * 10 - 10; i < flag * 10; i++)
+          {
+            coloring(i, flag, 2);
+          }
+          for (int i = 0; i < 300; i++)
+          {
+            led_refresh(flag);
+            delay(10);
+          }
+          return flag;
         }
-        for (int i = 0; i < 1000; i++)
-        {
-          led_refresh(flag);
-          delay(10);
-        }
-        return flag;
+        else
+          return 0;
       }
-      else
-        return 0;
     }
 
 

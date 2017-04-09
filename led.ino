@@ -48,6 +48,47 @@ void led_refresh(uint8_t dimming)
     temp.b = gammatable[(long)color[i].b * dim[i / 10] / 255];
     LED.set_crgb_at(i, temp);
   }
+  for (int i = 0; i < 4; i++)
+  {
+    cRGB w;
+    w.r = w.g = w.b = 255;
+    if (input[i] < -3)
+    {
+      switch(i)
+      {
+        case 0:
+        LED.set_crgb_at(0, w);
+        break;
+        case 1:
+        LED.set_crgb_at(9, w);
+        break;
+        case 3:
+        LED.set_crgb_at(10, w);
+        break;
+        case 2:
+        LED.set_crgb_at(19, w);
+        break;
+      }
+    }
+    if (input[i] < -1 * LONG_PRESS)
+    {
+      switch(i)
+      {
+        case 0:
+        LED.set_crgb_at(1, w);
+        break;
+        case 1:
+        LED.set_crgb_at(8, w);
+        break;
+        case 3:
+        LED.set_crgb_at(11, w);
+        break;
+        case 2:
+        LED.set_crgb_at(18, w);
+        break;
+      }
+    }
+  }
   LED.sync();
 }
 
@@ -90,6 +131,6 @@ void exchange()
   match_point[2] = temp;
 
   
-  delay(2000);
+  delay(500);
 }
 
